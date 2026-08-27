@@ -1,21 +1,21 @@
 class Solution {
-    public Boolean[][] dp;
     public boolean canPartition(int[] arr) {
-        int sum=0;
+        int n=arr.length,sum=0;
         for(int x:arr) sum+=x;
         if(sum%2!=0) return false;
-        dp=new Boolean[sum+1][arr.length+1];
-        return solve(arr,0,sum/2,0);
-    }
-    public boolean solve(int[] arr,int s,int half,int i){
-        if(i==arr.length){
-            if(s==half) return true;
-            return false;
+        int tar=sum/2;
+        int[] dp=new int[tar+1];
+        for(int i=arr[0];i<=tar;i++){
+            dp[i]=arr[0];
         }
-        if(s>half) return false;
-        if(dp[s][i]!=null) return dp[s][i];
-        boolean b1=solve(arr,s+arr[i],half,i+1);
-        boolean b2=solve(arr,s,half,i+1);
-        return dp[s][i]=b1 || b2;
+        for(int i=1;i<n;i++){
+            for(int j=tar;j>=arr[i];j--){
+                dp[j]=Math.max(dp[j],arr[i]+dp[j-arr[i]]);
+            }
+        }
+        for(int i=0;i<=tar;i++){
+            if(dp[i]==tar) return true;
+        }
+        return false;
     }
 }
